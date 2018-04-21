@@ -7,6 +7,6 @@ namespace Finegamedesign.LudumDare41
         [Header("When enough match, they are destroyed.")]
         [SerializeField]
         private int m_MatchIndex = -1;
-        public int MatchIndex { get { return m_MatchIndex; } }
+        public int matchIndex { get { return m_MatchIndex; } }
     }
 }

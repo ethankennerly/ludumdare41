@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4503930470268170}
   - component: {fileID: 61122232658094128}
+  - component: {fileID: 114388050557251004}
   m_Layer: 0
   m_Name: BlockGrid
   m_TagString: Untagged
@@ -65,3 +66,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5, y: 8}
   m_EdgeRadius: 0
+--- !u!114 &114388050557251004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1900743836722466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d96ac3a5ba5f34b0cb8379be648c9a47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Controller:
+    cellSize: 1
+    numColumns: 0
+    numRows: 0
+    numCells: 0
+    grid: []
