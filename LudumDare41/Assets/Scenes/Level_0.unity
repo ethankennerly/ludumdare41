@@ -274,12 +274,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 1908703820057760, guid: 938334aa4acf34cb194f54ed05b2c6a8, type: 2}
-      propertyPath: m_Name
-      value: VerticalInput
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114207758832508338, guid: 938334aa4acf34cb194f54ed05b2c6a8, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 938334aa4acf34cb194f54ed05b2c6a8, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &1091797787

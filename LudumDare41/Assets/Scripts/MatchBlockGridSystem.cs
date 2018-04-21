@@ -8,12 +8,16 @@ namespace Finegamedesign.LudumDare41
     public sealed class MatchBlockGrid
     {
         public float cellSize = 1f;
+        public float cellCenter = 0.5f;
+        public float snapZ = 1f;
         public int numColumns = 0;
         public int numRows = 0;
         public int numCells = 0;
+        public Vector2 min;
+        public Vector2 max;
         public MatchBlock[] grid;
 
-        public readonly List<MatchBlock> blocksOutOfBounds = new List<MatchBlock>();
+        public readonly HashSet<MatchBlock> blocksOutOfBounds = new HashSet<MatchBlock>();
         public readonly HashSet<MatchBlock> nextBlockSet = new HashSet<MatchBlock>();
     }
 
@@ -36,16 +40,20 @@ namespace Finegamedesign.LudumDare41
 
         public void ParseGrid(BoxCollider2D collider, float snapZ)
         {
-            ParseGrid(collider, snapZ, blockGrid);
+            blockGrid.snapZ = snapZ;
+            ParseGrid(collider, blockGrid);
         }
 
-        public void ParseGrid(BoxCollider2D collider, float snapZ, MatchBlockGrid blockGrid)
+        public void ParseGrid(BoxCollider2D collider, MatchBlockGrid blockGrid)
         {
             Bounds bounds = collider.bounds;
             Vector2 min = (Vector2)bounds.min;
             Vector2 max = (Vector2)bounds.max;
+            blockGrid.min = min;
+            blockGrid.max = max;
             float cellSize = blockGrid.cellSize;
-            float cellCenter = 0.5f * cellSize;
+            blockGrid.cellCenter = 0.5f * cellSize;
+            blockGrid.cellSize = cellSize;
             blockGrid.numRows = (int)((max.y - min.y) / cellSize);
             blockGrid.numColumns = (int)((max.x - min.x) / cellSize);
             int numCells = blockGrid.numRows * blockGrid.numColumns;
@@ -55,6 +63,14 @@ namespace Finegamedesign.LudumDare41
             blockGrid.grid = grid;
             blockGrid.blocksOutOfBounds.Clear();
             MatchBlock[] blocks = GameObject.FindObjectsOfType<MatchBlock>();
+            UpdateBlocks(blockGrid, blocks);
+        }
+
+        private void UpdateBlocks(MatchBlockGrid blockGrid, IEnumerable<MatchBlock> blocks)
+        {
+            Vector2 min = blockGrid.min;
+            float cellSize = blockGrid.cellSize;
+            float cellCenter = blockGrid.cellCenter;
             foreach (MatchBlock block in blocks)
             {
                 Vector2 blockPoint = (Vector2)block.transform.position;
@@ -64,16 +80,17 @@ namespace Finegamedesign.LudumDare41
                 Vector3 snappedPosition = new Vector3(
                     cellSize * (columnIndex + min.x) + cellCenter,
                     cellSize * (rowIndex + min.y) + cellCenter,
-                    snapZ);
+                    blockGrid.snapZ);
                 block.transform.position = snappedPosition;
 
-                bool contains = collider.OverlapPoint(blockPoint);
+                bool contains = cellIndex >= 0 && cellIndex < blockGrid.numCells;
                 if (!contains)
                 {
                     blockGrid.blocksOutOfBounds.Add(block);
                     continue;
                 }
-                grid[cellIndex] = block;
+                blockGrid.blocksOutOfBounds.Remove(block);
+                blockGrid.grid[cellIndex] = block;
             }
         }
 
@@ -88,6 +105,8 @@ namespace Finegamedesign.LudumDare41
             {
                 Move(block, 0, -2);
             }
+            UpdateBlocks(blockGrid, blockGrid.nextBlockSet);
+            blockGrid.nextBlockSet.Clear();
         }
 
         private void Move(MatchBlock block, float x, float y)
