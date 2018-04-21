@@ -63,25 +63,20 @@ namespace Finegamedesign.LudumDare41
             blockGrid.grid = grid;
             blockGrid.blocksOutOfBounds.Clear();
             MatchBlock[] blocks = GameObject.FindObjectsOfType<MatchBlock>();
-            UpdateBlocks(blockGrid, blocks);
+            IncludeBlocks(blockGrid, blocks);
         }
 
-        private void UpdateBlocks(MatchBlockGrid blockGrid, IEnumerable<MatchBlock> blocks)
+        private void IncludeBlocks(MatchBlockGrid blockGrid, IEnumerable<MatchBlock> blocks)
         {
             Vector2 min = blockGrid.min;
             float cellSize = blockGrid.cellSize;
-            float cellCenter = blockGrid.cellCenter;
             foreach (MatchBlock block in blocks)
             {
                 Vector2 blockPoint = (Vector2)block.transform.position;
                 int rowIndex = (int)((blockPoint.y - min.y) / cellSize);
                 int columnIndex = (int)((blockPoint.x - min.x) / cellSize);
                 int cellIndex = rowIndex * blockGrid.numColumns + columnIndex;
-                Vector3 snappedPosition = new Vector3(
-                    cellSize * (columnIndex + min.x) + cellCenter,
-                    cellSize * (rowIndex + min.y) + cellCenter,
-                    blockGrid.snapZ);
-                block.transform.position = snappedPosition;
+                SnapBlock(blockGrid, cellIndex, block);
 
                 bool contains = cellIndex >= 0 && cellIndex < blockGrid.numCells;
                 if (!contains)
@@ -92,6 +87,67 @@ namespace Finegamedesign.LudumDare41
                 blockGrid.blocksOutOfBounds.Remove(block);
                 blockGrid.grid[cellIndex] = block;
             }
+
+            PackBlocksDown(blockGrid);
+        }
+
+        private void PackBlocksDown(MatchBlockGrid blockGrid)
+        {
+            int numColumns = blockGrid.numColumns;
+            for (int aboveIndex = numColumns, numCells = blockGrid.numCells; aboveIndex < numCells; ++aboveIndex)
+            {
+                MatchBlock above = blockGrid.grid[aboveIndex];
+                if (above == null)
+                {
+                    continue;
+                }
+                int belowIndex = aboveIndex;
+                do
+                {
+                    int previousAboveIndex = belowIndex;
+                    belowIndex -= numColumns;
+                    MatchBlock below = blockGrid.grid[belowIndex];
+                    if (below != null)
+                    {
+                        break;
+                    }
+                    SwapBlocks(blockGrid, previousAboveIndex, belowIndex);
+                }
+                while (belowIndex >= 0);
+            }
+        }
+
+        private static void SwapBlocks(MatchBlockGrid blockGrid, int indexA, int indexB)
+        {
+            Swap(blockGrid.grid, indexA, indexB);
+            SnapBlock(blockGrid, indexA);
+            SnapBlock(blockGrid, indexB);
+        }
+
+        private static void Swap<T>(T[] elements, int indexA, int indexB)
+        {
+            T swap = elements[indexA];
+            elements[indexA] = elements[indexB];
+            elements[indexB] = swap;
+        }
+
+        private static void SnapBlock(MatchBlockGrid blockGrid, int cellIndex, MatchBlock block = null)
+        {
+            if (block == null)
+            {
+                block = blockGrid.grid[cellIndex];
+                if (block == null)
+                {
+                    return;
+                }
+            }
+            int rowIndex = cellIndex / blockGrid.numColumns;
+            int columnIndex = cellIndex % blockGrid.numColumns;
+            Vector3 snappedPosition = new Vector3(
+                blockGrid.cellSize * (columnIndex + blockGrid.min.x) + blockGrid.cellCenter,
+                blockGrid.cellSize * (rowIndex + blockGrid.min.y) + blockGrid.cellCenter,
+                blockGrid.snapZ);
+            block.transform.position = snappedPosition;
         }
 
         private void AcceptBlockSet()
@@ -103,9 +159,10 @@ namespace Finegamedesign.LudumDare41
             }
             foreach (MatchBlock block in blockGrid.nextBlockSet)
             {
+                // TODO: Tolerate varying height.
                 Move(block, 0, -2);
             }
-            UpdateBlocks(blockGrid, blockGrid.nextBlockSet);
+            IncludeBlocks(blockGrid, blockGrid.nextBlockSet);
             blockGrid.nextBlockSet.Clear();
         }
 
