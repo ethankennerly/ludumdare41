@@ -142,7 +142,8 @@ namespace Finegamedesign.LudumDare41
 
         private static void Destroy(MatchBlock[] grid, int cellIndex)
         {
-            UnityEngine.Object.Destroy(grid[cellIndex].gameObject);
+            MatchBlock block = grid[cellIndex];
+            block.Match();
             grid[cellIndex] = null;
         }
     }
