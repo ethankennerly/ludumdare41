@@ -14,15 +14,21 @@ namespace Finegamedesign.LudumDare41
         private SkeletonAnimation m_Skeleton = null;
 
         [SerializeField]
+        private Animator m_Animator = null;
+
+        [SerializeField]
 		private string m_MatchAnimationName = null;
 
         public void Match()
         {
-            if (m_Skeleton == null)
+            if (m_Skeleton != null)
             {
-                return;
+                m_Skeleton.AnimationName = m_MatchAnimationName;
             }
-            m_Skeleton.AnimationName = m_MatchAnimationName;
+            if (m_Animator != null)
+            {
+                m_Animator.Play(m_MatchAnimationName);
+            }
         }
     }
 }

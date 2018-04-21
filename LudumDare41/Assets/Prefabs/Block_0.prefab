@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4696531993971984}
   - component: {fileID: 114375760601626328}
+  - component: {fileID: 95965816909707880}
   m_Layer: 0
   m_Name: Block_0
   m_TagString: Untagged
@@ -142,6 +143,23 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1507282091165632}
   m_Mesh: {fileID: 0}
+--- !u!95 &95965816909707880
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1126057175199420}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 991a9414c54d64295bb8dea2730b6c56, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114178421222068756
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -185,4 +203,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MatchIndex: 0
   m_Skeleton: {fileID: 114178421222068756}
+  m_Animator: {fileID: 95965816909707880}
   m_MatchAnimationName: Match
