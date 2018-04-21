@@ -23,19 +23,25 @@ namespace Finegamedesign.LudumDare41
 
     public sealed class MatchBlockGridSystem : ASingleton<MatchBlockGridSystem>
     {
+        public static event Action<MatchBlockGrid> onBlocksPacked;
+
         public readonly MatchBlockGrid blockGrid = new MatchBlockGrid();
 
         private Action m_OnSelectDown_AcceptBlockSet;
+        private Action<MatchBlockGrid> m_OnBlocksDestroyed_PackBlocksDown;
 
         public MatchBlockGridSystem()
         {
             m_OnSelectDown_AcceptBlockSet = AcceptBlockSet;
             VerticalInputSystem.onSelectDown += m_OnSelectDown_AcceptBlockSet;
+            m_OnBlocksDestroyed_PackBlocksDown = PackBlocksDown;
+            MatchDestroySystem.onBlocksDestroyed += m_OnBlocksDestroyed_PackBlocksDown;
         }
 
         ~MatchBlockGridSystem()
         {
             VerticalInputSystem.onSelectDown -= m_OnSelectDown_AcceptBlockSet;
+            MatchDestroySystem.onBlocksDestroyed -= m_OnBlocksDestroyed_PackBlocksDown;
         }
 
         public void ParseGrid(BoxCollider2D collider, float snapZ)
@@ -114,6 +120,11 @@ namespace Finegamedesign.LudumDare41
                     SwapBlocks(blockGrid, previousAboveIndex, belowIndex);
                 }
                 while (belowIndex >= numColumns);
+            }
+
+            if (onBlocksPacked != null)
+            {
+                onBlocksPacked(blockGrid);
             }
         }
 
