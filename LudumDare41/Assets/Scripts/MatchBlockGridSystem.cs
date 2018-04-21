@@ -19,6 +19,18 @@ namespace Finegamedesign.LudumDare41
 
         public readonly HashSet<MatchBlock> blocksOutOfBounds = new HashSet<MatchBlock>();
         public readonly HashSet<MatchBlock> nextBlockSet = new HashSet<MatchBlock>();
+
+        public static bool IsEmpty(MatchBlock[] grid)
+        {
+            foreach (MatchBlock block in grid)
+            {
+                if (block != null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     public sealed class MatchBlockGridSystem : ASingleton<MatchBlockGridSystem>
