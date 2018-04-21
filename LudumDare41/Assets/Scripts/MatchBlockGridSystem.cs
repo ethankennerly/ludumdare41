@@ -113,7 +113,7 @@ namespace Finegamedesign.LudumDare41
                     }
                     SwapBlocks(blockGrid, previousAboveIndex, belowIndex);
                 }
-                while (belowIndex >= 0);
+                while (belowIndex >= numColumns);
             }
         }
 
