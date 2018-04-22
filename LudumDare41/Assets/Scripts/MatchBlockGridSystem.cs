@@ -18,6 +18,7 @@ namespace Finegamedesign.LudumDare41
         public Vector2 max;
         public MatchBlock[] grid;
         public bool selectEnabled = false;
+        public bool simulationEnabled = true;
         public int numRowsInSet = 2;
 
         public readonly HashSet<MatchBlock> blocksOutOfBounds = new HashSet<MatchBlock>();
@@ -39,6 +40,7 @@ namespace Finegamedesign.LudumDare41
     [Serializable]
     public sealed class MatchBlockGridSystem : ASingleton<MatchBlockGridSystem>
     {
+        public static event Action onAcceptBlockSet;
         public static event Action onColumnOverflow;
         public static event Action<MatchBlockGrid> onBlocksPacked;
 
@@ -84,6 +86,11 @@ namespace Finegamedesign.LudumDare41
             blockGrid.selectEnabled = false;
         }
 
+        private bool InputEnabled()
+        {
+            return blockGrid.simulationEnabled && blockGrid.selectEnabled;
+        }
+
         public void ParseGrid(BoxCollider2D collider, float snapZ)
         {
             blockGrid.snapZ = snapZ;
@@ -110,6 +117,7 @@ namespace Finegamedesign.LudumDare41
             blockGrid.blocksOutOfBounds.Clear();
             MatchBlock[] blocks = GameObject.FindObjectsOfType<MatchBlock>();
             IncludeBlocks(blockGrid, blocks);
+            blockGrid.simulationEnabled = true;
         }
 
         private void IncludeBlocks(MatchBlockGrid blockGrid, IEnumerable<MatchBlock> blocks)
@@ -122,18 +130,20 @@ namespace Finegamedesign.LudumDare41
                 int rowIndex = (int)((blockPoint.y - min.y) / cellSize);
                 int columnIndex = (int)((blockPoint.x - min.x) / cellSize);
                 int cellIndex = rowIndex * blockGrid.numColumns + columnIndex;
-                SnapBlock(blockGrid, cellIndex, block);
 
                 bool contains = cellIndex >= 0 && cellIndex < blockGrid.numCells;
                 if (!contains)
                 {
                     blockGrid.blocksOutOfBounds.Add(block);
+                    SnapBlock(blockGrid, cellIndex, block);
                     continue;
                 }
                 blockGrid.blocksOutOfBounds.Remove(block);
                 if (blockGrid.grid[cellIndex] != null)
                 {
                     ColumnOverflow();
+                    SnapBlock(blockGrid, cellIndex, block);
+                    continue;
                 }
                 blockGrid.grid[cellIndex] = block;
             }
@@ -144,6 +154,7 @@ namespace Finegamedesign.LudumDare41
         private void ColumnOverflow()
         {
             DisableSelect();
+            blockGrid.simulationEnabled = false;
             if (onColumnOverflow != null)
             {
                 onColumnOverflow();
@@ -172,6 +183,10 @@ namespace Finegamedesign.LudumDare41
 
         private void PackBlocksDown(MatchBlockGrid blockGrid)
         {
+            if (!blockGrid.simulationEnabled)
+            {
+                return;
+            }
             bool isPacked = true;
             int numColumns = blockGrid.numColumns;
             for (int aboveIndex = numColumns, numCells = blockGrid.numCells; aboveIndex < numCells; ++aboveIndex)
@@ -261,11 +276,15 @@ namespace Finegamedesign.LudumDare41
 
         private void AcceptBlockSet()
         {
-            if (!blockGrid.selectEnabled)
+            if (!InputEnabled())
             {
                 return;
             }
             ShiftNextBlockSets();
+            if (onAcceptBlockSet != null)
+            {
+                onAcceptBlockSet();
+            }
         }
 
         private void ShiftNextBlockSets()
@@ -286,7 +305,7 @@ namespace Finegamedesign.LudumDare41
 
         private void RejectBlockSet()
         {
-            if (!blockGrid.selectEnabled)
+            if (!InputEnabled())
             {
                 return;
             }
