@@ -33,6 +33,7 @@ namespace Finegamedesign.LudumDare41
         }
     }
 
+    [Serializable]
     public sealed class MatchBlockGridSystem : ASingleton<MatchBlockGridSystem>
     {
         public static event Action<MatchBlockGrid> onBlocksPacked;
@@ -41,6 +42,9 @@ namespace Finegamedesign.LudumDare41
 
         private Action m_OnSelectDown_AcceptBlockSet;
         private Action<MatchBlockGrid> m_OnBlocksDestroyed_PackBlocksDown;
+
+        public float fallCellDuration = 0.25f;
+        private float m_FallCellTimeRemaining = -1f;
 
         public MatchBlockGridSystem()
         {
@@ -109,6 +113,26 @@ namespace Finegamedesign.LudumDare41
             PackBlocksDown(blockGrid);
         }
 
+        public void Update(float deltaTime)
+        {
+            UpdateFallTimeRemaining(deltaTime);
+        }
+
+        private void UpdateFallTimeRemaining(float deltaTime)
+        {
+            if (m_FallCellTimeRemaining < 0f)
+            {
+                return;
+            }
+            m_FallCellTimeRemaining -= deltaTime;
+            if (m_FallCellTimeRemaining > 0f)
+            {
+                return;
+            }
+            m_FallCellTimeRemaining = -1f;
+            PackBlocksDown(blockGrid);
+        }
+
         private void PackBlocksDown(MatchBlockGrid blockGrid)
         {
             int numColumns = blockGrid.numColumns;
@@ -131,9 +155,13 @@ namespace Finegamedesign.LudumDare41
                     }
                     SwapBlocks(blockGrid, previousAboveIndex, belowIndex);
                 }
-                while (belowIndex >= numColumns);
+                while (belowIndex >= numColumns && fallCellDuration <= 0f);
             }
 
+            if (fallCellDuration > 0f)
+            {
+                m_FallCellTimeRemaining = fallCellDuration;
+            }
             if (onBlocksPacked != null)
             {
                 onBlocksPacked(blockGrid);

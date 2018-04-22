@@ -12,5 +12,10 @@ namespace Finegamedesign.LudumDare41
         {
             controller.ParseGrid(m_Collider, transform.position.z);
         }
+
+        private void Update()
+        {
+            controller.Update(Time.deltaTime);
+        }
     }
 }
