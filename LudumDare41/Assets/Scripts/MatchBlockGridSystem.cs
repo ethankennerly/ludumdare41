@@ -298,11 +298,20 @@ namespace Finegamedesign.LudumDare41
             if (blockGrid.nextBlockSet.Count == 0)
             {
                 blockGrid.nextBlockSet.UnionWith(blockGrid.blocksOutOfBounds);
+                if (blockGrid.nextBlockSet.Count == 0)
+                {
+                    ColumnOverflow();
+                    return;
+                }
             }
             List<MatchBlock> blocksToMove = new List<MatchBlock>();
             List<float> distancesToMove = new List<float>();
             foreach (MatchBlock block in blockGrid.nextBlockSet)
             {
+                if (block == null)
+                {
+                    continue;
+                }
                 float distanceY = GetClearDistanceY(block.transform.position, -blockGrid.numRowsInSet);
                 if (distanceY == 0f)
                 {
