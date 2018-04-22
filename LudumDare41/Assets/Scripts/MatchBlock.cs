@@ -35,5 +35,9 @@ namespace Finegamedesign.LudumDare41
                 m_Animator.Play(m_MatchAnimationName);
             }
         }
+
+        public void Reject()
+        {
+        }
     }
 }

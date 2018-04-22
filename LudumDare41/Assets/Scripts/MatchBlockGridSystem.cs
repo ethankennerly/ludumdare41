@@ -18,6 +18,7 @@ namespace Finegamedesign.LudumDare41
         public Vector2 max;
         public MatchBlock[] grid;
         public bool selectEnabled = false;
+        public int numRowsInSet = 2;
 
         public readonly HashSet<MatchBlock> blocksOutOfBounds = new HashSet<MatchBlock>();
         public readonly HashSet<MatchBlock> nextBlockSet = new HashSet<MatchBlock>();
@@ -44,6 +45,7 @@ namespace Finegamedesign.LudumDare41
 
         private Action m_OnWin_DisableSelect;
         private Action m_OnSelectDown_AcceptBlockSet;
+        private Action m_OnSelectUp_RejectBlockSet;
         private Action<MatchBlockGrid> m_OnBlocksDestroyed_PackBlocksDown;
 
         public float fallPerCellDuration = 0.25f;
@@ -52,11 +54,16 @@ namespace Finegamedesign.LudumDare41
         public MatchBlockGridSystem()
         {
             m_OnSelectDown_AcceptBlockSet = AcceptBlockSet;
+            VerticalInputSystem.onSelectDown += m_OnSelectDown_AcceptBlockSet;
+
+            m_OnSelectUp_RejectBlockSet = RejectBlockSet;
+            VerticalInputSystem.onSelectUp += m_OnSelectUp_RejectBlockSet;
+
             m_OnBlocksDestroyed_PackBlocksDown = PackBlocksDown;
             MatchDestroySystem.onBlocksDestroyed += m_OnBlocksDestroyed_PackBlocksDown;
+
             m_OnWin_DisableSelect = DisableSelect;
             WinOnBlocksClearedSystem.onWin += m_OnWin_DisableSelect;
-            VerticalInputSystem.onSelectDown += m_OnSelectDown_AcceptBlockSet;
         }
 
         ~MatchBlockGridSystem()
@@ -64,6 +71,11 @@ namespace Finegamedesign.LudumDare41
             VerticalInputSystem.onSelectDown -= m_OnSelectDown_AcceptBlockSet;
             MatchDestroySystem.onBlocksDestroyed -= m_OnBlocksDestroyed_PackBlocksDown;
             WinOnBlocksClearedSystem.onWin += m_OnWin_DisableSelect;
+        }
+
+        private void EnableSelect()
+        {
+            blockGrid.selectEnabled = true;
         }
 
         private void DisableSelect()
@@ -177,10 +189,10 @@ namespace Finegamedesign.LudumDare41
             }
             if (!isPacked)
             {
-                blockGrid.selectEnabled = false;
+                DisableSelect();
                 return;
             }
-            blockGrid.selectEnabled = true;
+            EnableSelect();
             if (onBlocksPacked != null)
             {
                 onBlocksPacked(blockGrid);
@@ -214,10 +226,22 @@ namespace Finegamedesign.LudumDare41
             }
             int rowIndex = cellIndex / blockGrid.numColumns;
             int columnIndex = cellIndex % blockGrid.numColumns;
-            Vector3 snappedPosition = new Vector3(
-                blockGrid.cellSize * (columnIndex + blockGrid.min.x) + blockGrid.cellCenter,
-                blockGrid.cellSize * (rowIndex + blockGrid.min.y) + blockGrid.cellCenter,
-                blockGrid.snapZ);
+            SnapBlock(block,
+                new Vector3(blockGrid.cellSize * (columnIndex + blockGrid.min.x) + blockGrid.cellCenter,
+                    blockGrid.cellSize * (rowIndex + blockGrid.min.y) + blockGrid.cellCenter,
+                    blockGrid.snapZ
+                ),
+                duration
+            );
+        }
+
+        private static void SnapBlock(MatchBlock block, Vector3 snappedPosition, float duration = 0f)
+        {
+            if (duration <= 0f)
+            {
+                block.transform.position = snappedPosition;
+                return;
+            }
             block.transform.DOMove(snappedPosition, duration).SetEase(Ease.Linear);
         }
 
@@ -227,18 +251,87 @@ namespace Finegamedesign.LudumDare41
             {
                 return;
             }
+            ShiftNextBlockSets();
+        }
+
+        private void ShiftNextBlockSets()
+        {
             if (blockGrid.nextBlockSet.Count == 0)
             {
-                // TODO: Group remaining blocks into continguous sets.
                 blockGrid.nextBlockSet.UnionWith(blockGrid.blocksOutOfBounds);
             }
             foreach (MatchBlock block in blockGrid.nextBlockSet)
             {
-                // TODO: Tolerate varying height.
-                Move(block, 0, -2);
+                Move(block, 0, -blockGrid.numRowsInSet);
             }
             IncludeBlocks(blockGrid, blockGrid.nextBlockSet);
             blockGrid.nextBlockSet.Clear();
+
+            EnableSelect();
+        }
+
+        private void RejectBlockSet()
+        {
+            if (!blockGrid.selectEnabled)
+            {
+                return;
+            }
+            if (blockGrid.nextBlockSet.Count == 0)
+            {
+                blockGrid.nextBlockSet.UnionWith(blockGrid.blocksOutOfBounds);
+                if (blockGrid.nextBlockSet.Count == 0)
+                {
+                    return;
+                }
+            }
+            float topY = MaxY(blockGrid.blocksOutOfBounds) + blockGrid.cellSize;
+            float nextRowSet = (topY - blockGrid.max.y - blockGrid.cellSize) % blockGrid.numRowsInSet;
+            topY += blockGrid.numRowsInSet - nextRowSet;
+            bool isAny = false;
+            foreach (MatchBlock block in blockGrid.nextBlockSet)
+            {
+                if (IsInNextRowSet(block, blockGrid))
+                {
+                    isAny = true;
+                    Vector3 position = block.transform.position;
+                    float offsetAboveGrid = position.y - blockGrid.max.y - blockGrid.cellSize;
+                    position.y = topY + offsetAboveGrid;
+                    SnapBlock(block, position, 0f);
+
+                    block.Reject();
+                }
+            }
+            if (!isAny)
+            {
+                return;
+            }
+            DisableSelect();
+            ShiftNextBlockSets();
+            EnableSelect();
+        }
+
+        private static float MaxY(HashSet<MatchBlock> blockSets)
+        {
+            float maxY = float.NegativeInfinity;
+            foreach (MatchBlock block in blockSets)
+            {
+                float y = block.transform.position.y;
+                if (y > maxY)
+                {
+                    maxY = y;
+                }
+            }
+            return maxY;
+        }
+
+        private static bool IsInNextRowSet(MatchBlock block, MatchBlockGrid blockGrid)
+        {
+            Vector2 min = blockGrid.min;
+            float cellSize = blockGrid.cellSize;
+            Vector2 blockPoint = (Vector2)block.transform.position;
+            int rowIndex = (int)((blockPoint.y - min.y) / cellSize);
+            return rowIndex >= blockGrid.numRows
+                && rowIndex < blockGrid.numRows + blockGrid.numRowsInSet;
         }
 
         private void Move(MatchBlock block, float x, float y)
