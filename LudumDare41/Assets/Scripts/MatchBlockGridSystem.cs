@@ -17,6 +17,7 @@ namespace Finegamedesign.LudumDare41
         public Vector2 min;
         public Vector2 max;
         public MatchBlock[] grid;
+        public bool selectEnabled = false;
 
         public readonly HashSet<MatchBlock> blocksOutOfBounds = new HashSet<MatchBlock>();
         public readonly HashSet<MatchBlock> nextBlockSet = new HashSet<MatchBlock>();
@@ -41,6 +42,7 @@ namespace Finegamedesign.LudumDare41
 
         public readonly MatchBlockGrid blockGrid = new MatchBlockGrid();
 
+        private Action m_OnWin_DisableSelect;
         private Action m_OnSelectDown_AcceptBlockSet;
         private Action<MatchBlockGrid> m_OnBlocksDestroyed_PackBlocksDown;
 
@@ -50,15 +52,23 @@ namespace Finegamedesign.LudumDare41
         public MatchBlockGridSystem()
         {
             m_OnSelectDown_AcceptBlockSet = AcceptBlockSet;
-            VerticalInputSystem.onSelectDown += m_OnSelectDown_AcceptBlockSet;
             m_OnBlocksDestroyed_PackBlocksDown = PackBlocksDown;
             MatchDestroySystem.onBlocksDestroyed += m_OnBlocksDestroyed_PackBlocksDown;
+            m_OnWin_DisableSelect = DisableSelect;
+            WinOnBlocksClearedSystem.onWin += m_OnWin_DisableSelect;
+            VerticalInputSystem.onSelectDown += m_OnSelectDown_AcceptBlockSet;
         }
 
         ~MatchBlockGridSystem()
         {
             VerticalInputSystem.onSelectDown -= m_OnSelectDown_AcceptBlockSet;
             MatchDestroySystem.onBlocksDestroyed -= m_OnBlocksDestroyed_PackBlocksDown;
+            WinOnBlocksClearedSystem.onWin += m_OnWin_DisableSelect;
+        }
+
+        private void DisableSelect()
+        {
+            blockGrid.selectEnabled = false;
         }
 
         public void ParseGrid(BoxCollider2D collider, float snapZ)
@@ -136,6 +146,7 @@ namespace Finegamedesign.LudumDare41
 
         private void PackBlocksDown(MatchBlockGrid blockGrid)
         {
+            bool isPacked = true;
             int numColumns = blockGrid.numColumns;
             for (int aboveIndex = numColumns, numCells = blockGrid.numCells; aboveIndex < numCells; ++aboveIndex)
             {
@@ -154,6 +165,7 @@ namespace Finegamedesign.LudumDare41
                     {
                         break;
                     }
+                    isPacked = false;
                     SwapBlocks(blockGrid, previousAboveIndex, belowIndex, fallPerCellDuration);
                 }
                 while (belowIndex >= numColumns && fallPerCellDuration <= 0f);
@@ -163,6 +175,12 @@ namespace Finegamedesign.LudumDare41
             {
                 m_FallPerCellTimeRemaining = fallPerCellDuration;
             }
+            if (!isPacked)
+            {
+                blockGrid.selectEnabled = false;
+                return;
+            }
+            blockGrid.selectEnabled = true;
             if (onBlocksPacked != null)
             {
                 onBlocksPacked(blockGrid);
@@ -205,6 +223,10 @@ namespace Finegamedesign.LudumDare41
 
         private void AcceptBlockSet()
         {
+            if (!blockGrid.selectEnabled)
+            {
+                return;
+            }
             if (blockGrid.nextBlockSet.Count == 0)
             {
                 // TODO: Group remaining blocks into continguous sets.

@@ -71,6 +71,7 @@ namespace Finegamedesign.LudumDare41
             {
                 destroyTimeRemaining = destroyDuration;
                 m_BlockGrid = blockGrid;
+                blockGrid.selectEnabled = false;
                 return;
             }
             if (onBlocksDestroyed != null)

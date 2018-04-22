@@ -201,7 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5cd352450c34ba7b6e9c095ea9bfcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MatchIndex: 0
+  m_MatchIndex: 2
   m_Skeleton: {fileID: 114107046261275562}
   m_Animator: {fileID: 95109509564848874}
   m_MatchAnimationName: Match
