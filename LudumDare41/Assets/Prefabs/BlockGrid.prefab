@@ -219,8 +219,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96ac3a5ba5f34b0cb8379be648c9a47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Controller:
-    fallPerCellDuration: 0.25
   m_Collider: {fileID: 61122232658094128}
   m_AudioSource: {fileID: 82508161761425108}
   m_AcceptClips:
@@ -233,6 +231,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fb339ff149a42456b8b94d8920d48ef5, type: 3}
   - {fileID: 8300000, guid: 0587b05d15da9486085ffbd81b6b2094, type: 3}
   - {fileID: 8300000, guid: 499529b3970f7489b926b6939c8421fe, type: 3}
+  m_MatchedClips:
+  - {fileID: 8300000, guid: 6ce33328f0fb84560830276a5308b620, type: 3}
+  - {fileID: 8300000, guid: 5ffd01a4482714391a89f8da40afea1d, type: 3}
+  - {fileID: 8300000, guid: 398fc3dde0e2f49989e69be6b9ea7e0e, type: 3}
 --- !u!114 &114677057573203728
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -246,7 +248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Controller:
     minBlocksToMatch: 4
-    destroyDuration: 2
+    destroyDuration: 0
 --- !u!212 &212003878199457412
 SpriteRenderer:
   m_ObjectHideFlags: 1

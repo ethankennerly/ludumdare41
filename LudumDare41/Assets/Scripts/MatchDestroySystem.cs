@@ -52,7 +52,7 @@ namespace Finegamedesign.LudumDare41
                 return;
             }
             destroyTimeRemaining = -1f;
-            if (onBlocksDestroyed != null)
+            if (onBlocksDestroyed != null && m_BlockGrid != null)
             {
                 onBlocksDestroyed(m_BlockGrid);
             }
@@ -98,7 +98,12 @@ namespace Finegamedesign.LudumDare41
                 isDestroying = true;
                 foreach (int matchedBlockIndex in matchedBlockIndexes)
                 {
-                    Destroy(blockGrid.grid, matchedBlockIndex);
+                    MatchBlock block = Destroy(blockGrid.grid, matchedBlockIndex);
+                    if (block == null)
+                    {
+                        continue;
+                    }
+                    blockGrid.destroyedMatchIndexes.Add(block.matchIndex);
                 }
             }
             return isDestroying;
@@ -175,15 +180,16 @@ namespace Finegamedesign.LudumDare41
             return matchedGroups;
         }
 
-        private static void Destroy(MatchBlock[] grid, int cellIndex)
+        private static MatchBlock Destroy(MatchBlock[] grid, int cellIndex)
         {
             MatchBlock block = grid[cellIndex];
             if (block == null)
             {
-                return;
+                return null;
             }
             block.Match();
             grid[cellIndex] = null;
+            return block;
         }
     }
 }

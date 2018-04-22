@@ -22,6 +22,7 @@ namespace Finegamedesign.LudumDare41
         public bool selectEnabled = false;
         public bool simulationEnabled = true;
         public int numRowsInSet = 2;
+        public HashSet<int> destroyedMatchIndexes = new HashSet<int>();
 
         public readonly HashSet<MatchBlock> blocksOutOfBounds = new HashSet<MatchBlock>();
         public readonly HashSet<MatchBlock> nextBlockSet = new HashSet<MatchBlock>();
