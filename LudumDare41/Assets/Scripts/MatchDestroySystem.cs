@@ -10,6 +10,10 @@ namespace Finegamedesign.LudumDare41
     {
         public int minBlocksToMatch = 4;
 
+        public float destroyDuration = 1f;
+
+        private float destroyTimeRemaining = -1f;
+
         public static event Action<MatchBlockGrid> onBlocksDestroyed;
 
         private Action<MatchBlockGrid> m_OnBlocksPacked_DestroyMatches;
@@ -17,6 +21,8 @@ namespace Finegamedesign.LudumDare41
         private readonly Stack<int> m_CellIndexesToVisit = new Stack<int>();
         
         private readonly HashSet<int> m_VisitedBlockIndexes = new HashSet<int>();
+
+        private MatchBlockGrid m_BlockGrid;
 
         public MatchDestroySystem()
         {
@@ -29,6 +35,29 @@ namespace Finegamedesign.LudumDare41
             MatchBlockGridSystem.onBlocksPacked -= m_OnBlocksPacked_DestroyMatches;
         }
 
+        public void Update(float deltaTime)
+        {
+            UpdateDestroy(deltaTime);
+        }
+
+        private void UpdateDestroy(float deltaTime)
+        {
+            if (destroyTimeRemaining < 0f)
+            {
+                return;
+            }
+            destroyTimeRemaining -= deltaTime;
+            if (destroyTimeRemaining > 0f)
+            {
+                return;
+            }
+            destroyTimeRemaining = -1f;
+            if (onBlocksDestroyed != null)
+            {
+                onBlocksDestroyed(m_BlockGrid);
+            }
+        }
+
         private void DestroyMatches(MatchBlockGrid blockGrid)
         {
             bool isDestroying = TryDestroyMatches(blockGrid, minBlocksToMatch,
@@ -36,6 +65,12 @@ namespace Finegamedesign.LudumDare41
 
             if (!isDestroying)
             {
+                return;
+            }
+            if (destroyDuration >= 0f)
+            {
+                destroyTimeRemaining = destroyDuration;
+                m_BlockGrid = blockGrid;
                 return;
             }
             if (onBlocksDestroyed != null)
@@ -144,7 +179,6 @@ namespace Finegamedesign.LudumDare41
             MatchBlock block = grid[cellIndex];
             if (block == null)
             {
-                // DebugUtil.Log("MatchDestroySystem.Destroy: Grid cell " + cellIndex + " is already empty.");
                 return;
             }
             block.Match();
