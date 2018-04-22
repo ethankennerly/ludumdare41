@@ -13,3 +13,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp:Finegamedesign.Utils:SceneList
   m_SceneNames:
   - Level_0
+  - Level_1
