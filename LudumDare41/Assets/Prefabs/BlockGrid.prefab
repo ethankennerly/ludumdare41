@@ -240,6 +240,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9c46bd29b0a7c41748be7483c8ac6043, type: 3}
   - {fileID: 8300000, guid: b0ba2cf37477048aaa9462d5e73df318, type: 3}
   - {fileID: 8300000, guid: 1e0c8359db71d43dc962836e7481798a, type: 3}
+  m_PackedClips:
+  - {fileID: 8300000, guid: 34524e29a6060409ebb0208c915a3ef5, type: 3}
+  - {fileID: 8300000, guid: 068c33f1f993a425281afb2d1ebc6380, type: 3}
 --- !u!114 &114677057573203728
 MonoBehaviour:
   m_ObjectHideFlags: 1

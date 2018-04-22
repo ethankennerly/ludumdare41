@@ -23,12 +23,16 @@ namespace Finegamedesign.LudumDare41
         [SerializeField]
         private AudioClip[] m_MatchedClips = null;
 
+        [SerializeField]
+        private AudioClip[] m_PackedClips = null;
+
         private void OnEnable()
         {
             controller.ParseGrid(m_Collider, transform.position.z);
 
             MatchBlockGridSystem.onAcceptBlockSet += PlayRandomAcceptClip;
             MatchBlockGridSystem.onRejectBlockSet += PlayRandomRejectClip;
+            // MatchBlockGridSystem.onBlocksPacked += PlayRandomPackedClip;
             MatchDestroySystem.onBlocksDestroyed += PlayMatchChainClips;
         }
 
@@ -36,6 +40,7 @@ namespace Finegamedesign.LudumDare41
         {
             MatchBlockGridSystem.onAcceptBlockSet -= PlayRandomAcceptClip;
             MatchBlockGridSystem.onRejectBlockSet -= PlayRandomRejectClip;
+            MatchBlockGridSystem.onBlocksPacked -= PlayRandomPackedClip;
             MatchDestroySystem.onBlocksDestroyed -= PlayMatchChainClips;
         }
 
@@ -47,6 +52,11 @@ namespace Finegamedesign.LudumDare41
         private void PlayRandomRejectClip()
         {
             AudioUtils.PlayRandom(m_AudioSource, m_RejectClips);
+        }
+
+        private void PlayRandomPackedClip(MatchBlockGrid blockGridNotUsed = null)
+        {
+            AudioUtils.PlayRandom(m_AudioSource, m_PackedClips);
         }
 
         private void PlayMatchChainClips(MatchBlockGrid blockGrid)
