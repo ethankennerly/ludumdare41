@@ -9,19 +9,10 @@ namespace Finegamedesign.Utils
         [Header("Each scene in the build to cycle through.")]
         [SerializeField]
         private string[] m_SceneNames;
-
-        // Resets each play.  If serialized, the value persists.
-        [NonSerialized]
-        private int m_CurrentIndex = 0;
-
-        public string GetNextSceneName()
+        public string[] sceneNames
         {
-            ++m_CurrentIndex;
-            if (m_CurrentIndex >= m_SceneNames.Length)
-            {
-                m_CurrentIndex = 0;
-            }
-            return m_SceneNames[m_CurrentIndex];
+            get { return m_SceneNames; }
+            set { m_SceneNames = value; }
         }
     }
 }

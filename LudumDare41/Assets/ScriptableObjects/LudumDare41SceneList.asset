@@ -8,9 +8,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: LevelSceneList
-  m_EditorClassIdentifier: Assembly-CSharp:Finegamedesign.Utils:SceneList
+  m_Script: {fileID: 11500000, guid: afbf38a93a82e46b695e697415a51346, type: 3}
+  m_Name: LudumDare41SceneList
+  m_EditorClassIdentifier: 
   m_SceneNames:
   - Level_0
   - Level_1
