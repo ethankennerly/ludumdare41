@@ -39,6 +39,7 @@ namespace Finegamedesign.LudumDare41
     [Serializable]
     public sealed class MatchBlockGridSystem : ASingleton<MatchBlockGridSystem>
     {
+        public static event Action onColumnOverflow;
         public static event Action<MatchBlockGrid> onBlocksPacked;
 
         public readonly MatchBlockGrid blockGrid = new MatchBlockGrid();
@@ -130,10 +131,23 @@ namespace Finegamedesign.LudumDare41
                     continue;
                 }
                 blockGrid.blocksOutOfBounds.Remove(block);
+                if (blockGrid.grid[cellIndex] != null)
+                {
+                    ColumnOverflow();
+                }
                 blockGrid.grid[cellIndex] = block;
             }
 
             PackBlocksDown(blockGrid);
+        }
+
+        private void ColumnOverflow()
+        {
+            DisableSelect();
+            if (onColumnOverflow != null)
+            {
+                onColumnOverflow();
+            }
         }
 
         public void Update(float deltaTime)

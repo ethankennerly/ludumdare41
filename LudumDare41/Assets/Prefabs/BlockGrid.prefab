@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Controller:
     minBlocksToMatch: 4
-    destroyDuration: 1
+    destroyDuration: 2
 --- !u!212 &212003878199457412
 SpriteRenderer:
   m_ObjectHideFlags: 1
