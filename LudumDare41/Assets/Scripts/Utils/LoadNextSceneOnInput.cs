@@ -6,6 +6,8 @@ namespace Finegamedesign.Utils
 {
     public sealed class LoadNextSceneOnInput : MonoBehaviour
     {
+        public static int nextIncrement = 1;
+
         [SerializeField]
         private SceneList m_SceneList;
 
@@ -20,7 +22,7 @@ namespace Finegamedesign.Utils
 
         public string GetNextSceneName(string[] sceneNames)
         {
-            ++m_CurrentIndex;
+            m_CurrentIndex += nextIncrement;
             if (m_CurrentIndex >= sceneNames.Length || m_CurrentIndex < 0)
             {
                 m_CurrentIndex = 0;

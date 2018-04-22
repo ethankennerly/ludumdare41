@@ -1,3 +1,4 @@
+using Finegamedesign.Utils;
 using System;
 using UnityEngine;
 
@@ -26,6 +27,8 @@ namespace Finegamedesign.LudumDare41
 
         private void PlayAnimation()
         {
+            LoadNextSceneOnInput.nextIncrement = 0;
+
             if (m_Animator == null)
             {
                 return;

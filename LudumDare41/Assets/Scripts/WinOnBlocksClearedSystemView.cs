@@ -27,6 +27,8 @@ namespace Finegamedesign.LudumDare41
 
         private void PlayAnimation()
         {
+            LoadNextSceneOnInput.nextIncrement = 1;
+
             if (m_Animator == null)
             {
                 return;
