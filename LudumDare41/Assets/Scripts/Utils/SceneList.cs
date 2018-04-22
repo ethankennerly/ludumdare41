@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Finegamedesign.Utils
@@ -9,6 +10,8 @@ namespace Finegamedesign.Utils
         [SerializeField]
         private string[] m_SceneNames;
 
+        // Resets each play.  If serialized, the value persists.
+        [NonSerialized]
         private int m_CurrentIndex = 0;
 
         public string GetNextSceneName()
