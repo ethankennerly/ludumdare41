@@ -28,6 +28,7 @@ namespace Finegamedesign.LudumDare41
         {
             if (m_Skeleton != null)
             {
+                m_Skeleton.loop = false;
                 m_Skeleton.AnimationName = m_MatchAnimationName;
             }
             if (m_Animator != null)

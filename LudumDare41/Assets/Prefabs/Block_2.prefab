@@ -95,7 +95,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1593660170766650}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.17000002, y: 4.45, z: 0}
+  m_LocalPosition: {x: 2.1, y: -4.4743648, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4815305689743640}
@@ -188,7 +188,7 @@ MonoBehaviour:
   logErrors: 0
   disableRenderingOnOverride: 1
   _animationName: Idle
-  loop: 0
+  loop: 1
   timeScale: 1
 --- !u!114 &114971117579235090
 MonoBehaviour:

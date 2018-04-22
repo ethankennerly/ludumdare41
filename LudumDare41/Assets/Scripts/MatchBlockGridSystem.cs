@@ -41,6 +41,8 @@ namespace Finegamedesign.LudumDare41
     public sealed class MatchBlockGridSystem : ASingleton<MatchBlockGridSystem>
     {
         public static event Action onAcceptBlockSet;
+        public static event Action onRejectBlockSet;
+
         public static event Action onColumnOverflow;
         public static event Action<MatchBlockGrid> onBlocksPacked;
 
@@ -99,6 +101,7 @@ namespace Finegamedesign.LudumDare41
 
         public void ParseGrid(BoxCollider2D collider, MatchBlockGrid blockGrid)
         {
+            blockGrid.simulationEnabled = true;
             Bounds bounds = collider.bounds;
             Vector2 min = (Vector2)bounds.min;
             Vector2 max = (Vector2)bounds.max;
@@ -117,7 +120,6 @@ namespace Finegamedesign.LudumDare41
             blockGrid.blocksOutOfBounds.Clear();
             MatchBlock[] blocks = GameObject.FindObjectsOfType<MatchBlock>();
             IncludeBlocks(blockGrid, blocks);
-            blockGrid.simulationEnabled = true;
         }
 
         private void IncludeBlocks(MatchBlockGrid blockGrid, IEnumerable<MatchBlock> blocks)
@@ -341,6 +343,10 @@ namespace Finegamedesign.LudumDare41
             DisableSelect();
             ShiftNextBlockSets();
             EnableSelect();
+            if (onRejectBlockSet != null)
+            {
+                onRejectBlockSet();
+            }
         }
 
         private static float MaxY(HashSet<MatchBlock> blockSets)

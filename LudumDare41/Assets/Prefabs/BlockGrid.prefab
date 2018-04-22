@@ -228,6 +228,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5ffd01a4482714391a89f8da40afea1d, type: 3}
   - {fileID: 8300000, guid: 398fc3dde0e2f49989e69be6b9ea7e0e, type: 3}
   - {fileID: 8300000, guid: e7abd4373de6342a0874be7e318e5810, type: 3}
+  m_RejectClips:
+  - {fileID: 8300000, guid: ad0062775e72d40b4bfb2763d3d03aba, type: 3}
+  - {fileID: 8300000, guid: fb339ff149a42456b8b94d8920d48ef5, type: 3}
+  - {fileID: 8300000, guid: 0587b05d15da9486085ffbd81b6b2094, type: 3}
+  - {fileID: 8300000, guid: 499529b3970f7489b926b6939c8421fe, type: 3}
 --- !u!114 &114677057573203728
 MonoBehaviour:
   m_ObjectHideFlags: 1
