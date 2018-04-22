@@ -9,16 +9,16 @@ namespace Finegamedesign.Utils
         [SerializeField]
         private string[] m_SceneNames;
 
-        private int m_SelectedIndex = 0;
+        private int m_CurrentIndex = 0;
 
         public string GetNextSceneName()
         {
-            ++m_SelectedIndex;
-            if (m_SelectedIndex >= m_SceneNames.Length)
+            ++m_CurrentIndex;
+            if (m_CurrentIndex >= m_SceneNames.Length)
             {
-                m_SelectedIndex = 0;
+                m_CurrentIndex = 0;
             }
-            return m_SceneNames[m_SelectedIndex];
+            return m_SceneNames[m_CurrentIndex];
         }
     }
 }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Finegamedesign.Utils;
 using System;
 using System.Collections.Generic;
@@ -43,8 +44,8 @@ namespace Finegamedesign.LudumDare41
         private Action m_OnSelectDown_AcceptBlockSet;
         private Action<MatchBlockGrid> m_OnBlocksDestroyed_PackBlocksDown;
 
-        public float fallCellDuration = 0.25f;
-        private float m_FallCellTimeRemaining = -1f;
+        public float fallPerCellDuration = 0.25f;
+        private float m_FallPerCellTimeRemaining = -1f;
 
         public MatchBlockGridSystem()
         {
@@ -120,16 +121,16 @@ namespace Finegamedesign.LudumDare41
 
         private void UpdateFallTimeRemaining(float deltaTime)
         {
-            if (m_FallCellTimeRemaining < 0f)
+            if (m_FallPerCellTimeRemaining < 0f)
             {
                 return;
             }
-            m_FallCellTimeRemaining -= deltaTime;
-            if (m_FallCellTimeRemaining > 0f)
+            m_FallPerCellTimeRemaining -= deltaTime;
+            if (m_FallPerCellTimeRemaining > 0f)
             {
                 return;
             }
-            m_FallCellTimeRemaining = -1f;
+            m_FallPerCellTimeRemaining = -1f;
             PackBlocksDown(blockGrid);
         }
 
@@ -153,14 +154,14 @@ namespace Finegamedesign.LudumDare41
                     {
                         break;
                     }
-                    SwapBlocks(blockGrid, previousAboveIndex, belowIndex);
+                    SwapBlocks(blockGrid, previousAboveIndex, belowIndex, fallPerCellDuration);
                 }
-                while (belowIndex >= numColumns && fallCellDuration <= 0f);
+                while (belowIndex >= numColumns && fallPerCellDuration <= 0f);
             }
 
-            if (fallCellDuration > 0f)
+            if (fallPerCellDuration > 0f)
             {
-                m_FallCellTimeRemaining = fallCellDuration;
+                m_FallPerCellTimeRemaining = fallPerCellDuration;
             }
             if (onBlocksPacked != null)
             {
@@ -168,11 +169,11 @@ namespace Finegamedesign.LudumDare41
             }
         }
 
-        private static void SwapBlocks(MatchBlockGrid blockGrid, int indexA, int indexB)
+        private static void SwapBlocks(MatchBlockGrid blockGrid, int indexA, int indexB, float duration)
         {
             Swap(blockGrid.grid, indexA, indexB);
-            SnapBlock(blockGrid, indexA);
-            SnapBlock(blockGrid, indexB);
+            SnapBlock(blockGrid, indexA, null, duration);
+            SnapBlock(blockGrid, indexB, null, duration);
         }
 
         private static void Swap<T>(T[] elements, int indexA, int indexB)
@@ -182,7 +183,8 @@ namespace Finegamedesign.LudumDare41
             elements[indexB] = swap;
         }
 
-        private static void SnapBlock(MatchBlockGrid blockGrid, int cellIndex, MatchBlock block = null)
+        private static void SnapBlock(MatchBlockGrid blockGrid, int cellIndex,
+            MatchBlock block = null, float duration = 0f)
         {
             if (block == null)
             {
@@ -198,7 +200,7 @@ namespace Finegamedesign.LudumDare41
                 blockGrid.cellSize * (columnIndex + blockGrid.min.x) + blockGrid.cellCenter,
                 blockGrid.cellSize * (rowIndex + blockGrid.min.y) + blockGrid.cellCenter,
                 blockGrid.snapZ);
-            block.transform.position = snappedPosition;
+            block.transform.DOMove(snappedPosition, duration).SetEase(Ease.Linear);
         }
 
         private void AcceptBlockSet()
