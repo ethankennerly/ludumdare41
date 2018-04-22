@@ -17,7 +17,12 @@ namespace Finegamedesign.LudumDare41
         private Animator m_Animator = null;
 
         [SerializeField]
-		private string m_MatchAnimationName = null;
+        private string m_MatchAnimationName = null;
+
+        private void Awake()
+        {
+            name = "MatchBlock_" + m_MatchIndex.ToString();
+        }
 
         public void Match()
         {

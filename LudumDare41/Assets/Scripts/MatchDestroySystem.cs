@@ -89,7 +89,6 @@ namespace Finegamedesign.LudumDare41
             List<HashSet<int>> matchedGroups = new List<HashSet<int>>();
             int[] neighborIndexes = new int[4];
             Stack<int> groupIndexesToVisit = new Stack<int>();
-            HashSet<int> matchedBlockIndexes = new HashSet<int>();
             while (cellIndexesToVisit.Count > 0)
             {
                 int blockIndex = cellIndexesToVisit.Pop();
@@ -97,18 +96,23 @@ namespace Finegamedesign.LudumDare41
                 {
                     continue;
                 }
-                matchedBlockIndexes.Clear();
-                matchedBlockIndexes.Add(blockIndex);
+                HashSet<int> matchedBlockIndexes = new HashSet<int>();
                 groupIndexesToVisit.Clear();
                 groupIndexesToVisit.Push(blockIndex);
                 while (groupIndexesToVisit.Count > 0)
                 {
                     int cellIndex = groupIndexesToVisit.Pop();
-                    neighborIndexes[0] = cellIndex - 1;
-                    neighborIndexes[1] = cellIndex + 1;
-                    neighborIndexes[2] = cellIndex - blockGrid.numColumns;
-                    neighborIndexes[3] = cellIndex + blockGrid.numColumns;
-                    MatchBlock block = blockGrid.grid[cellIndex];
+                    MatchBlock cell = blockGrid.grid[cellIndex];
+                    if (!matchedBlockIndexes.Add(cellIndex))
+                    {
+                        continue;
+                    }
+                    int columnIndex = cellIndex % blockGrid.numColumns;
+                    int rowIndex = cellIndex / blockGrid.numRows;
+                    neighborIndexes[0] = columnIndex <= 0 ? -1 : cellIndex - 1;
+                    neighborIndexes[1] = columnIndex >= (blockGrid.numColumns - 1) ? -1 : cellIndex + 1;
+                    neighborIndexes[2] = rowIndex <= 0 ? -1 : cellIndex - blockGrid.numColumns;
+                    neighborIndexes[3] = rowIndex >= (blockGrid.numRows - 1) ? -1 : cellIndex + blockGrid.numColumns;
                     foreach (int neighborIndex in neighborIndexes)
                     {
                         if (neighborIndex < 0 || neighborIndex >= blockGrid.numCells)
@@ -120,16 +124,11 @@ namespace Finegamedesign.LudumDare41
                         {
                             continue;
                         }
-                        if (!visitedBlockIndexes.Add(neighborIndex))
-                        {
-                            continue;
-                        }
-                        if (neighbor.matchIndex != block.matchIndex)
+                        if (neighbor.matchIndex != cell.matchIndex)
                         {
                             continue;
                         }
                         groupIndexesToVisit.Push(neighborIndex);
-                        matchedBlockIndexes.Add(neighborIndex);
                     }
                 }
                 if (matchedBlockIndexes.Count > 0)
@@ -143,6 +142,11 @@ namespace Finegamedesign.LudumDare41
         private static void Destroy(MatchBlock[] grid, int cellIndex)
         {
             MatchBlock block = grid[cellIndex];
+            if (block == null)
+            {
+                // DebugUtil.Log("MatchDestroySystem.Destroy: Grid cell " + cellIndex + " is already empty.");
+                return;
+            }
             block.Match();
             grid[cellIndex] = null;
         }
