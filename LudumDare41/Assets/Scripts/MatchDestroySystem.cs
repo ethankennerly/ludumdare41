@@ -54,6 +54,7 @@ namespace Finegamedesign.LudumDare41
             destroyTimeRemaining = -1f;
             if (onBlocksDestroyed != null && m_BlockGrid != null)
             {
+                m_BlockGrid.simulationEnabled = true;
                 onBlocksDestroyed(m_BlockGrid);
             }
         }
@@ -72,6 +73,7 @@ namespace Finegamedesign.LudumDare41
                 destroyTimeRemaining = destroyDuration;
                 m_BlockGrid = blockGrid;
                 blockGrid.selectEnabled = false;
+                blockGrid.simulationEnabled = false;
                 return;
             }
             if (onBlocksDestroyed != null)
