@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Finegamedesign.LudumDare41
 {
+    [Serializable]
     public sealed class MatchBlockGrid
     {
         public float cellSize = 1f;
@@ -46,7 +47,7 @@ namespace Finegamedesign.LudumDare41
         public static event Action onColumnOverflow;
         public static event Action<MatchBlockGrid> onBlocksPacked;
 
-        public readonly MatchBlockGrid blockGrid = new MatchBlockGrid();
+        public MatchBlockGrid blockGrid = new MatchBlockGrid();
 
         private Action m_OnWin_DisableSelect;
         private Action m_OnSelectDown_AcceptBlockSet;
@@ -124,15 +125,9 @@ namespace Finegamedesign.LudumDare41
 
         private void IncludeBlocks(MatchBlockGrid blockGrid, IEnumerable<MatchBlock> blocks)
         {
-            Vector2 min = blockGrid.min;
-            float cellSize = blockGrid.cellSize;
             foreach (MatchBlock block in blocks)
             {
-                Vector2 blockPoint = (Vector2)block.transform.position;
-                int rowIndex = (int)((blockPoint.y - min.y) / cellSize);
-                int columnIndex = (int)((blockPoint.x - min.x) / cellSize);
-                int cellIndex = rowIndex * blockGrid.numColumns + columnIndex;
-
+                int cellIndex = GetCellIndex(block.transform.position);
                 bool contains = cellIndex >= 0 && cellIndex < blockGrid.numCells;
                 if (!contains)
                 {
@@ -270,7 +265,7 @@ namespace Finegamedesign.LudumDare41
         {
             if (duration <= 0f)
             {
-                block.transform.position = snappedPosition;
+                block.transform.position = new Vector3(snappedPosition.x, snappedPosition.y, snappedPosition.z);
                 return;
             }
             block.transform.DOMove(snappedPosition, duration).SetEase(Ease.Linear);
@@ -297,7 +292,13 @@ namespace Finegamedesign.LudumDare41
             }
             foreach (MatchBlock block in blockGrid.nextBlockSet)
             {
-                Move(block, 0, -blockGrid.numRowsInSet);
+                float distanceY = GetClearDistanceY(block.transform.position, -blockGrid.numRowsInSet);
+                if (distanceY == 0f)
+                {
+                    ColumnOverflow();
+                    return;
+                }
+                Move(block, 0, distanceY);
             }
             IncludeBlocks(blockGrid, blockGrid.nextBlockSet);
             blockGrid.nextBlockSet.Clear();
@@ -377,6 +378,38 @@ namespace Finegamedesign.LudumDare41
         {
             Vector3 position = block.transform.position;
             block.transform.position = new Vector3(position.x + x, position.y + y, position.z);
+        }
+
+        private int GetCellIndex(Vector3 position)
+        {
+            Vector2 blockPoint = (Vector2)position;
+            int rowIndex = (int)((blockPoint.y - blockGrid.min.y) / blockGrid.cellSize);
+            int columnIndex = (int)((blockPoint.x - blockGrid.min.x) / blockGrid.cellSize);
+            int cellIndex = rowIndex * blockGrid.numColumns + columnIndex;
+            return cellIndex;
+        }
+
+        private float GetClearDistanceY(Vector3 position, float distance)
+        {
+            Vector3 nextPosition = new Vector3();
+            nextPosition.x = position.x;
+            nextPosition.z = position.z;
+            while (distance < 0f)
+            {
+                nextPosition.y = position.y + distance;
+                int cellIndex = GetCellIndex(nextPosition);
+                bool contains = cellIndex >= 0 && cellIndex < blockGrid.numCells;
+                if (!contains)
+                {
+                    return distance;
+                }
+                if (blockGrid.grid[cellIndex] == null)
+                {
+                    return distance;
+                }
+                distance += 1f;
+            }
+            return 0f;
         }
     }
 }
