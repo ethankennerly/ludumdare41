@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace Finegamedesign.LudumDare41
 {
-    [Serializable]
+    // To inspect grid, uncomment:
+    // [Serializable]
     public sealed class MatchBlockGrid
     {
         public float cellSize = 1f;
@@ -38,7 +39,8 @@ namespace Finegamedesign.LudumDare41
         }
     }
 
-    [Serializable]
+    // To inspect grid, uncomment:
+    // [Serializable]
     public sealed class MatchBlockGridSystem : ASingleton<MatchBlockGridSystem>
     {
         public static event Action onAcceptBlockSet;
@@ -125,9 +127,15 @@ namespace Finegamedesign.LudumDare41
 
         private void IncludeBlocks(MatchBlockGrid blockGrid, IEnumerable<MatchBlock> blocks)
         {
+            HashSet<int> occupiedCellIndexes = new HashSet<int>();
             foreach (MatchBlock block in blocks)
             {
                 int cellIndex = GetCellIndex(block.transform.position);
+                if (!occupiedCellIndexes.Add(cellIndex))
+                {
+                    Debug.LogError("MatchBlockGridSystem.IncludeBlocks: There is already a block in cell index "
+                        + cellIndex + " at position " + block.transform.position);
+                }
                 bool contains = cellIndex >= 0 && cellIndex < blockGrid.numCells;
                 if (!contains)
                 {
@@ -136,7 +144,8 @@ namespace Finegamedesign.LudumDare41
                     continue;
                 }
                 blockGrid.blocksOutOfBounds.Remove(block);
-                if (blockGrid.grid[cellIndex] != null)
+                MatchBlock otherBlock = blockGrid.grid[cellIndex];
+                if (otherBlock != null && block != otherBlock)
                 {
                     ColumnOverflow();
                     SnapBlock(blockGrid, cellIndex, block);
@@ -290,6 +299,8 @@ namespace Finegamedesign.LudumDare41
             {
                 blockGrid.nextBlockSet.UnionWith(blockGrid.blocksOutOfBounds);
             }
+            List<MatchBlock> blocksToMove = new List<MatchBlock>();
+            List<float> distancesToMove = new List<float>();
             foreach (MatchBlock block in blockGrid.nextBlockSet)
             {
                 float distanceY = GetClearDistanceY(block.transform.position, -blockGrid.numRowsInSet);
@@ -298,7 +309,12 @@ namespace Finegamedesign.LudumDare41
                     ColumnOverflow();
                     return;
                 }
-                Move(block, 0, distanceY);
+                blocksToMove.Add(block);
+                distancesToMove.Add(distanceY);
+            }
+            for (int index = 0, end = blocksToMove.Count; index < end; ++index)
+            {
+                Move(blocksToMove[index], 0, distancesToMove[index]);
             }
             IncludeBlocks(blockGrid, blockGrid.nextBlockSet);
             blockGrid.nextBlockSet.Clear();
