@@ -23,6 +23,7 @@ namespace Finegamedesign.LudumDare41
         public bool simulationEnabled = true;
         public int numRowsInSet = 2;
         public HashSet<int> destroyedMatchIndexes = new HashSet<int>();
+        public int numChains = 0;
 
         public readonly HashSet<MatchBlock> blocksOutOfBounds = new HashSet<MatchBlock>();
         public readonly HashSet<MatchBlock> nextBlockSet = new HashSet<MatchBlock>();
@@ -287,6 +288,7 @@ namespace Finegamedesign.LudumDare41
             {
                 return;
             }
+            blockGrid.numChains = 0;
             ShiftNextBlockSets();
             if (onAcceptBlockSet != null)
             {

@@ -230,6 +230,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 638fba470fecd4438adcbacd9983179a, type: 3}
   - {fileID: 8300000, guid: 74215d591d8e044fc9460dc483a30188, type: 3}
   - {fileID: 8300000, guid: 23a2a8805397d495f896b0f0c701bd5d, type: 3}
+  m_MatchChainClips:
+  - {fileID: 8300000, guid: 455784486ade2435aa4b397aeda9f617, type: 3}
+  - {fileID: 8300000, guid: 9c46bd29b0a7c41748be7483c8ac6043, type: 3}
+  - {fileID: 8300000, guid: b0ba2cf37477048aaa9462d5e73df318, type: 3}
+  - {fileID: 8300000, guid: 1e0c8359db71d43dc962836e7481798a, type: 3}
   m_MatchedClips:
   - {fileID: 8300000, guid: 455784486ade2435aa4b397aeda9f617, type: 3}
   - {fileID: 8300000, guid: 9c46bd29b0a7c41748be7483c8ac6043, type: 3}

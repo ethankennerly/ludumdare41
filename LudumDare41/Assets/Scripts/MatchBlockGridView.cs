@@ -18,6 +18,9 @@ namespace Finegamedesign.LudumDare41
         private AudioClip[] m_RejectClips = null;
 
         [SerializeField]
+        private AudioClip[] m_MatchChainClips = null;
+
+        [SerializeField]
         private AudioClip[] m_MatchedClips = null;
 
         private void OnEnable()
@@ -26,14 +29,14 @@ namespace Finegamedesign.LudumDare41
 
             MatchBlockGridSystem.onAcceptBlockSet += PlayRandomAcceptClip;
             MatchBlockGridSystem.onRejectBlockSet += PlayRandomRejectClip;
-            MatchDestroySystem.onBlocksDestroyed += PlayMatchedClips;
+            MatchDestroySystem.onBlocksDestroyed += PlayMatchChainClips;
         }
 
         private void OnDisable()
         {
             MatchBlockGridSystem.onAcceptBlockSet -= PlayRandomAcceptClip;
             MatchBlockGridSystem.onRejectBlockSet -= PlayRandomRejectClip;
-            MatchDestroySystem.onBlocksDestroyed -= PlayMatchedClips;
+            MatchDestroySystem.onBlocksDestroyed -= PlayMatchChainClips;
         }
 
         private void PlayRandomAcceptClip()
@@ -46,6 +49,24 @@ namespace Finegamedesign.LudumDare41
             AudioUtils.PlayRandom(m_AudioSource, m_RejectClips);
         }
 
+        private void PlayMatchChainClips(MatchBlockGrid blockGrid)
+        {
+            if (m_MatchedClips == null || m_MatchedClips.Length == 0)
+            {
+                return;
+            }
+            int index = blockGrid.numChains - 1;
+            if (index < 0)
+            {
+                return;
+            }
+            if (index >= m_MatchChainClips.Length)
+            {
+                index = m_MatchChainClips.Length - 1;
+            }
+            m_AudioSource.PlayOneShot(m_MatchedClips[index]);
+        }
+
         private void PlayMatchedClips(MatchBlockGrid blockGrid)
         {
             if (m_MatchedClips == null || m_MatchedClips.Length == 0)
@@ -54,8 +75,7 @@ namespace Finegamedesign.LudumDare41
             }
             foreach (int index in blockGrid.destroyedMatchIndexes)
             {
-                m_AudioSource.clip = m_MatchedClips[index];
-                m_AudioSource.Play();
+                m_AudioSource.PlayOneShot(m_MatchedClips[index]);
             }
             blockGrid.destroyedMatchIndexes.Clear();
         }

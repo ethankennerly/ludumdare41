@@ -68,6 +68,7 @@ namespace Finegamedesign.LudumDare41
             {
                 return;
             }
+            blockGrid.numChains++;
             if (destroyDuration >= 0f)
             {
                 destroyTimeRemaining = destroyDuration;
