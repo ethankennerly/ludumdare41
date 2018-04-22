@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Name: LudumDare41SceneList
   m_EditorClassIdentifier: 
   m_SceneNames:
-  - Level_0
   - Level_1
+  - Level_2
+  - Level_3
