@@ -18,6 +18,8 @@ Credits:
 - Animation: Toby Hefflin
 - Engineering: Ethan Kennerly
 
+Coworking space hosted by GluPlay, the creator of Cooking Dash and Restaurant Dash.
+
 Game software: Animation runtime: Spine, Tween engine: DOTween, Game engine: Unity.
 
 Ludum Dare game jam, April 20th - 22nd, 2018.
