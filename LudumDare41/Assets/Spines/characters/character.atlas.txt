@@ -1,216 +1,222 @@
 
 character.png
-size: 1024,64
+size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 base1
   rotate: false
-  xy: 2, 17
-  size: 45, 45
-  orig: 45, 45
-  offset: 0, 0
-  index: -1
-base10
-  rotate: false
-  xy: 425, 17
-  size: 45, 45
-  orig: 45, 45
-  offset: 0, 0
-  index: -1
-base11
-  rotate: false
-  xy: 472, 17
-  size: 45, 45
-  orig: 45, 45
-  offset: 0, 0
-  index: -1
-base12
-  rotate: false
-  xy: 519, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 2, 709
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 base2
   rotate: false
-  xy: 49, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 2, 407
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 base3
   rotate: false
-  xy: 96, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 304, 709
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 base4
   rotate: false
-  xy: 143, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 2, 105
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 base5
   rotate: false
-  xy: 190, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 304, 407
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 base6
   rotate: false
-  xy: 237, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 606, 709
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 base7
   rotate: false
-  xy: 284, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 304, 105
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 base8
   rotate: false
-  xy: 331, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 606, 407
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 base9
   rotate: false
-  xy: 378, 17
-  size: 45, 45
-  orig: 45, 45
+  xy: 606, 105
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: -1
 brow1
-  rotate: false
-  xy: 566, 17
-  size: 10, 3
-  orig: 10, 3
+  rotate: true
+  xy: 908, 860
+  size: 66, 23
+  orig: 66, 23
   offset: 0, 0
   index: -1
 brow2
   rotate: false
-  xy: 19, 10
-  size: 9, 5
-  orig: 9, 5
+  xy: 184, 71
+  size: 60, 32
+  orig: 60, 32
   offset: 0, 0
   index: -1
 brow3
-  rotate: false
-  xy: 19, 2
-  size: 7, 6
-  orig: 7, 6
-  offset: 0, 0
-  index: -1
-brow4
-  rotate: false
-  xy: 566, 39
-  size: 45, 23
-  orig: 45, 23
-  offset: 0, 0
-  index: -1
-brow5
-  rotate: false
-  xy: 613, 39
-  size: 45, 23
-  orig: 45, 23
-  offset: 0, 0
-  index: -1
-brow6
-  rotate: false
-  xy: 660, 39
-  size: 45, 23
-  orig: 45, 23
-  offset: 0, 0
-  index: -1
-brow7
-  rotate: false
-  xy: 707, 39
-  size: 45, 23
-  orig: 45, 23
+  rotate: true
+  xy: 933, 877
+  size: 49, 37
+  orig: 49, 37
   offset: 0, 0
   index: -1
 brow8
   rotate: false
-  xy: 2, 8
-  size: 15, 7
-  orig: 15, 7
+  xy: 908, 965
+  size: 103, 44
+  orig: 103, 44
   offset: 0, 0
   index: -1
 brow9
   rotate: false
-  xy: 851, 56
-  size: 12, 6
-  orig: 12, 6
-  offset: 0, 0
-  index: -1
-particle
-  rotate: false
-  xy: 754, 31
-  size: 31, 31
-  orig: 31, 31
+  xy: 101, 65
+  size: 81, 38
+  orig: 81, 38
   offset: 0, 0
   index: -1
 pupil1
   rotate: false
-  xy: 851, 49
-  size: 9, 5
-  orig: 9, 5
+  xy: 908, 928
+  size: 62, 35
+  orig: 62, 35
   offset: 0, 0
   index: -1
 pupil2
-  rotate: false
-  xy: 583, 23
-  size: 5, 5
-  orig: 5, 5
+  rotate: true
+  xy: 246, 69
+  size: 34, 35
+  orig: 34, 35
   offset: 0, 0
   index: -1
 pupil3
-  rotate: true
-  xy: 865, 57
-  size: 5, 8
-  orig: 5, 8
+  rotate: false
+  xy: 972, 911
+  size: 32, 52
+  orig: 32, 52
   offset: 0, 0
   index: -1
 pupil4
   rotate: false
-  xy: 583, 30
-  size: 8, 7
-  orig: 8, 7
+  xy: 101, 18
+  size: 51, 45
+  orig: 51, 45
   offset: 0, 0
   index: -1
 pupil5
   rotate: false
-  xy: 593, 34
-  size: 3, 3
-  orig: 3, 3
+  xy: 154, 42
+  size: 19, 21
+  orig: 19, 21
   offset: 0, 0
   index: -1
 pupil6
   rotate: false
-  xy: 566, 22
-  size: 15, 15
-  orig: 15, 15
+  xy: 2, 2
+  size: 97, 101
+  orig: 97, 101
+  offset: 0, 0
+  index: -1
+
+character2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+base10
+  rotate: false
+  xy: 2, 608
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+base11
+  rotate: false
+  xy: 2, 306
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+base12
+  rotate: false
+  xy: 304, 608
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+brow4
+  rotate: false
+  xy: 2, 154
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: -1
+brow5
+  rotate: false
+  xy: 304, 456
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: -1
+brow6
+  rotate: false
+  xy: 606, 758
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: -1
+brow7
+  rotate: false
+  xy: 2, 2
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 304, 249
+  size: 205, 205
+  orig: 205, 205
   offset: 0, 0
   index: -1
 sclera
   rotate: false
-  xy: 787, 32
-  size: 30, 30
-  orig: 30, 30
+  xy: 606, 556
+  size: 200, 200
+  orig: 200, 200
   offset: 0, 0
   index: -1
 sclera2
   rotate: false
-  xy: 819, 32
-  size: 30, 30
-  orig: 30, 30
+  xy: 304, 47
+  size: 200, 200
+  orig: 200, 200
   offset: 0, 0
   index: -1
