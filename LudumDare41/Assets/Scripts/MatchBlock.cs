@@ -11,6 +11,15 @@ namespace Finegamedesign.LudumDare41
         public int matchIndex { get { return m_MatchIndex; } }
 
         [SerializeField]
+        private int m_FirstSkinVariant = 1;
+
+        [SerializeField]
+        private int m_NumSkinVariants = 4;
+
+        [SerializeField]
+        private string m_SkinPrefix = "character";
+
+        [SerializeField]
         private SkeletonAnimation m_Skeleton = null;
 
         [SerializeField]
@@ -19,9 +28,22 @@ namespace Finegamedesign.LudumDare41
         [SerializeField]
         private string m_MatchAnimationName = null;
 
-        private void Awake()
+        private void Start()
         {
             name = "MatchBlock_" + m_MatchIndex.ToString();
+            SetRandomSkin();
+        }
+
+        private void SetRandomSkin()
+        {
+            if (m_Skeleton == null)
+            {
+                return;
+            }
+            int skinNumber = m_MatchIndex * m_NumSkinVariants
+                + Random.Range(0, m_NumSkinVariants) + m_FirstSkinVariant;
+            string skinName = m_SkinPrefix + skinNumber;
+            m_Skeleton.skeleton.SetSkin(skinName);
         }
 
         public void Match()
