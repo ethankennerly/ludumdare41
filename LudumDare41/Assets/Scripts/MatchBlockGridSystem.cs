@@ -123,6 +123,7 @@ namespace Finegamedesign.LudumDare41
             MatchBlock[] grid = new MatchBlock[numCells];
             blockGrid.grid = grid;
             blockGrid.blocksOutOfBounds.Clear();
+            blockGrid.nextBlockSet.Clear();
             MatchBlock[] blocks = GameObject.FindObjectsOfType<MatchBlock>();
             IncludeBlocks(blockGrid, blocks);
         }
@@ -132,6 +133,10 @@ namespace Finegamedesign.LudumDare41
             HashSet<int> occupiedCellIndexes = new HashSet<int>();
             foreach (MatchBlock block in blocks)
             {
+                if (block == null)
+                {
+                    continue;
+                }
                 int cellIndex = GetCellIndex(block.transform.position);
                 if (!occupiedCellIndexes.Add(cellIndex))
                 {
@@ -394,6 +399,10 @@ namespace Finegamedesign.LudumDare41
 
         private static bool IsInNextRowSet(MatchBlock block, MatchBlockGrid blockGrid)
         {
+            if (block == null)
+            {
+                return false;
+            }
             Vector2 min = blockGrid.min;
             float cellSize = blockGrid.cellSize;
             Vector2 blockPoint = (Vector2)block.transform.position;
